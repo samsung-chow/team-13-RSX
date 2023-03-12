@@ -3,12 +3,12 @@ int ir_right = 12;
 
 int left_wheel_speed = 0;
 int right_wheel_speed = 0;
-int left_wheel = 0;
-int right_wheel = 0;
-int r_in1 = 0;
-int r_in2 = 0;
-int l_in1 = 0;
-int l_in2 = 0;
+int left_wheel = 5;
+int right_wheel = 6;
+int r_in1 = 9;
+int r_in2 = 8;
+int l_in1 = 3;
+int l_in2 = 2;
 
 
 void setup() {
@@ -31,8 +31,8 @@ void setup() {
   // self note for dicretions: 
 	digitalWrite(l_in1, LOW);
 	digitalWrite(l_in2, LOW);
-	digitalWrite(l_in1, LOW);
-	digitalWrite(l_in2, LOW);
+	digitalWrite(r_in1, LOW);
+	digitalWrite(r_in2, LOW);
 }
 
 void initial_startup_test(){
@@ -43,18 +43,32 @@ void initial_startup_test(){
   digitalWrite(r_in1, LOW);
 	digitalWrite(r_in2, HIGH);
 
-  analogWrite(left_wheel, 25);
-  analogWrite(right_wheel, 25);
+  analogWrite(left_wheel, 150);
+  analogWrite(right_wheel, 150);
 
-  delay(5000);
+  delay(1000);
+
+	// digitalWrite(l_in1, LOW);
+	// digitalWrite(l_in2, LOW);
+	// digitalWrite(r_in1, LOW);
+	// digitalWrite(r_in2, LOW);
 
   analogWrite(left_wheel, 0);
   analogWrite(right_wheel, 0);
+
+  Serial.println("done");
+  delay(1000);
+  Serial.println("done2");
 }
 
 void set_motor_speed(int wheel, int target_speed){
   // making sure we dont shoot ourselves 
+  digitalWrite(l_in1, LOW);
+	digitalWrite(l_in2, HIGH);
+  digitalWrite(r_in1, LOW);
+	digitalWrite(r_in2, HIGH);
   analogWrite(wheel, target_speed);
+  Serial.println(target_speed);
 }
 
 int full_speed_fwd(){
@@ -66,53 +80,54 @@ int full_speed_fwd(){
 	digitalWrite(r_in2, HIGH);
 
   // set motor speeds
-  set_motor_speed(left_wheel, 255);
-  set_motor_speed(right_wheel, 255);
+  set_motor_speed(left_wheel, 175);
+  set_motor_speed(right_wheel, 175);
 
   // record motor speeds
-  left_wheel_speed = 255;
-  right_wheel_speed = 255;
+  left_wheel_speed = 175;
+  right_wheel_speed = 175;
 }
 
 void turn_right(){
   // slow down both motors to 20%
-  set_motor_speed(left_wheel, 50);
-  set_motor_speed(right_wheel, 50);
+  set_motor_speed(left_wheel, 100);
+  set_motor_speed(right_wheel, 100);
 
   // slow down one side to turn 
-  set_motor_speed(right_wheel, 20);
+  set_motor_speed(right_wheel, 75);
   delay(250);
 
   // set motors back to 20%
-  set_motor_speed(left_wheel, 50);
-  set_motor_speed(right_wheel, 50);
-  left_wheel_speed = 25;
-  right_wheel_speed = 25;
+  set_motor_speed(left_wheel, 100);
+  set_motor_speed(right_wheel, 100);
+  left_wheel_speed = 100;
+  right_wheel_speed = 100;
 }
 
 void turn_left(){
   // slow down both motors to 20%
-  set_motor_speed(left_wheel, 50);
-  set_motor_speed(right_wheel, 50);
+  set_motor_speed(left_wheel, 100);
+  set_motor_speed(right_wheel, 100);
 
   // slow down one side to turn 
-  set_motor_speed(left_wheel, 20);
+  set_motor_speed(left_wheel, 75);
   delay(250);
 
   // set motors back to 20%
-  set_motor_speed(left_wheel, 50);
-  set_motor_speed(right_wheel, 50);
-  left_wheel_speed = 50;
-  right_wheel_speed = 50;
+  set_motor_speed(left_wheel, 100);
+  set_motor_speed(right_wheel, 100);
+  left_wheel_speed = 100;
+  right_wheel_speed = 100;
 }
 
 void stop(){
   set_motor_speed(left_wheel, 0);
   set_motor_speed(right_wheel, 0);
-  left_wheel_speed = 0;
-  right_wheel_speed = 0;
+	digitalWrite(l_in1, LOW);
+	digitalWrite(l_in2, LOW);
+	digitalWrite(r_in1, LOW);
+	digitalWrite(r_in2, LOW);
 }
-
 
 void loop() {
   int ir_left_reading = digitalRead(ir_left);
@@ -120,6 +135,7 @@ void loop() {
 
   if (ir_left_reading == 0 && ir_right_reading == 0){
     Serial.println("both sensors on white");
+    // initial_startup_test();
     full_speed_fwd();
   }
   else if (ir_left_reading == 1 && ir_right_reading == 0){
