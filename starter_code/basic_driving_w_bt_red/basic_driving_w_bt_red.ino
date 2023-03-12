@@ -46,13 +46,13 @@
 // In some casses your rover will not move as expected. This might be because the motor outputs are reversed in hardware. 
 
 
-int DIR_L_F = 13;    // Left Direction pin that will indicate forewards movement (1 for forewards, 0 for backwards).
-int DIR_L_B = 12;    // Left Direction pin that will indicate backwards movement (1 for backwards, 0 for forewards).
-int PWM_L = 11;      // Speed controll pin. *** This pin must be plugged into an output pin on the arduino that is labled PWM ***.
+int DIR_L_F = 9;    // Left Direction pin that will indicate forewards movement (1 for forewards, 0 for backwards).
+int DIR_L_B = 8;    // Left Direction pin that will indicate backwards movement (1 for backwards, 0 for forewards).
+int PWM_L = 5;      // Speed controll pin. *** This pin must be plugged into an output pin on the arduino that is labled PWM ***.
 
-int DIR_R_F = 4;     // Right Direction pin that will indicate forewards movement (1 for forewards, 0 for backwards)
+int DIR_R_F = 3;     // Right Direction pin that will indicate forewards movement (1 for forewards, 0 for backwards)
 int DIR_R_B = 2;     // Left Direction pin that will indicate backwards movement (1 for backwards, 0 for forewards).
-int PWM_R = 3;       // Speed controll pin. *** This pin must be plugged into an output pin on the arduino that is labled PWM ***.
+int PWM_R = 6;       // Speed controll pin. *** This pin must be plugged into an output pin on the arduino that is labled PWM ***.
 
 
 // Here you can also declaire your own variables and functions:
@@ -96,7 +96,7 @@ void setup() {
 
 
 void loop() {
-  GetBTCommand('#', ControllerInput);  // '\n' for Windows and '#' for android 
+  GetBTCommand('\n', ControllerInput);  // '\n' for Windows and '#' for android 
   SimpleMapInput(MotorOutputs, ControllerInput);
   ExecuteCommand_L298N(MotorOutputs);
 }
@@ -155,7 +155,7 @@ void GetBTCommand(char border,float * ans ){
     if ( Serial.available()){       //Checks the availability of Serial port
       data = Serial.read();         // Read the data and stores it in variable. 
       if(data == border){           // Different commands are separated by # or \n characters. If you read in a # or \n it is clear that a command has just ended.
-        if(border == '#'){
+        if(border == '\n'){
           UnicaTranslateCommand(ans , Command);
           return; 
         }else{
@@ -325,6 +325,10 @@ void ExecuteCommand_L298N(float * Command){
   }
   
   // Next set speed:
-  analogWrite(PWM_L, Command[2]);
-  analogWrite(PWM_R, Command[3]);
+  analogWrite(PWM_L, 255);
+  analogWrite(PWM_R, 255);
+  delay(15000);
+  analogWrite(PWM_L, 0);
+  analogWrite(PWM_R, 0);
+
 }
